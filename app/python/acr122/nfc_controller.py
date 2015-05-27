@@ -98,7 +98,7 @@ class NFCController(object):
                 
                 print "completed flow"
     
-    def __init__(self, dev):
+    def __init__(self):
         
         self.p2pInitiated = False
         
@@ -117,7 +117,7 @@ class NFCController(object):
             'symm-log': False
         }
         
-        self.device = dev
+        self.device = 'usb'
         #device = 'tty:AMA0:pn53x'
 
             
@@ -129,14 +129,9 @@ def goodbye():
  
 if __name__ == '__main__':
     #sys.path.insert(1, os.path.split(sys.path[0])[0])    
-    
-    if len(sys.argv) > 1:    
-        dev = str(sys.argv[1])
-    else:
-        dev = 'usb'
 
     atexit.register(goodbye)
-    ctrl = NFCController(dev)    
+    ctrl = NFCController()    
     ctrl.start()
 
     print 'finish'

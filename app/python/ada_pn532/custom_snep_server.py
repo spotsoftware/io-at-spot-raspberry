@@ -1,10 +1,12 @@
 import sys, os, argparse
 import zerorpc
 
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/nfcpy')
+sys.path.insert(1, os.path.split(sys.path[0])[0])
+sys.path.append('/home/pi/nfcpy')
+sys.path.append('/home/pi/nfcpy/examples')
 
 import threading
-from nfcpy import nfc
+import nfc
 import nfc.snep
 
 class CustomSnepServer(nfc.snep.SnepServer):
