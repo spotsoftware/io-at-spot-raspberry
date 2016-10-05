@@ -3,12 +3,9 @@ var exec = require('child_process').exec;
 var busy = false;
 
 gith({
-    repo: 'spotsoftware/io-at-spot', // the github-user/repo-name
-    file: /^raspberry/,
-    branch: 'deploy'
+    repo: 'spotsoftware/io-at-spot-raspberry', // the github-user/repo-name
+    branch: 'master'
 }).on('all', function (payload) {
-
-    console.log("new push on master branch and raspberry folder received");
     if (!busy) {
         busy = true;
         exec('./hook.sh', function (err, stdout, stderr) {
