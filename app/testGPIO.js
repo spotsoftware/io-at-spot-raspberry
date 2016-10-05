@@ -10,7 +10,6 @@ var Gpio = require('onoff').Gpio,
 //relay.writeSync(1);
 //buzzer.writeSync(0);
 
-
 iv = setInterval(function() {
     redLed.writeSync(redLed.readSync() === 0 ? 1 : 0);
     relay.writeSync(relay.readSync() === 0 ? 1 : 0);
