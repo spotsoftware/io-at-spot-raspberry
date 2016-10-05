@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # First, get the zip file
-cd /home/pi/io-at-spot && wget -O deploy.zip -q https://github.com/spotsoftware/io-at-spot/archive/deploy.zip
+cd /home/pi/io-at-spot && wget -O deploy.zip -q https://github.com/spotsoftware/io-at-spot-raspberry/archive/master.zip
 
 # Second, unzip it, if the zip file exists
 if [ -f /home/pi/io-at-spot/deploy.zip ]; then
@@ -13,7 +13,7 @@ if [ -f /home/pi/io-at-spot/deploy.zip ]; then
     rm /home/pi/io-at-spot/deploy.zip
 
     #move inside dir
-    cd io-at-spot-deploy/raspberry
+    cd io-at-spot-raspberry-master
 
     # Rename project directory to desired name
     mv app deploy
