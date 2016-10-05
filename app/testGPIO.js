@@ -19,7 +19,7 @@ iv = setInterval(function() {
 
 // Stop blinking the LED and turn it off after 5 seconds.
 setTimeout(function() {
-    clearInterval(iv); // Stop blinking
+    clearInterval(iv);
     stop(redLed);
     stop(greenLed);
     stop(buzzer);
