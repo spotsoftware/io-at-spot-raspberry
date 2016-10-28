@@ -53,7 +53,7 @@ function uartNfcRead(){
 }
 
 usbNfcRead();
-uartNfcRead();
+//uartNfcRead();
 
 module.exports = function(listener) {
     _listener = listener;
