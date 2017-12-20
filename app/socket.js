@@ -3,14 +3,13 @@ var actuatorService = require('./actuator');
 var offlineHelper = require('./offline-helper');
 var config = require('./config/config');
 var log = require('./logger');
-
 //NPM dependencies
 var io = require('socket.io-client');
 var client = require('request-json').newClient(config.SERVER_ADDR + ':' + config.SERVER_HTTP_PORT);
 
 //Start of parallel entities
 require('./config/close_handler');
-require('./ble')(this);
+// require('./ble')(this);
 require('./nfc')(this);
 require('./web/web')(this);
 
@@ -27,15 +26,15 @@ function isOnline() {
 function authenticate() {
     //Secure socket configuration
 
-    log.debug('authenticating...');
-
-    client.post('auth/device/', {
+   log.debug('authenticating...');
+    
+   client.post('auth/device', {
         id: config.ORGANIZATION_ID,
         password: config.ORGANIZATION_PASSWORD
     }, function (err, res, body) {
         if (err) {
-            log.error(err, 'cannot authenticate.');
-
+            
+            console.log(err);
             setTimeout(function () {
                 authenticate();
             }, 60000);

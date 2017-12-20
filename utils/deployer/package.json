@@ -5,7 +5,7 @@
     "description": "Doorkeeper project",
     "main": "hook.js",
     "dependencies": {
-        "gith": "^1.0.4"
+        "githubhook": "^1.9.3"
     },
     "engines": {
         "node": ">=0.8"

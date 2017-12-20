@@ -43,7 +43,7 @@ if [ -f /home/pi/io-at-spot/deploy.zip ]; then
     mv deploy /home/pi/io-at-spot/doorkeeper/
 
     cd /home/pi/io-at-spot
-    rm -rf io-at-spot-raspberr-master
+    rm -rf io-at-spot-raspberry-master
     
     #Starting service
     sudo /etc/init.d/doorkeeper start

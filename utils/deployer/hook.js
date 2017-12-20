@@ -1,12 +1,16 @@
-var gith = require('gith').create(9002); // run on port 9002
-var exec = require('child_process').exec;
+var githubhook = require('githubhook');
 var busy = false;
-
-gith({
-    repo: 'spotsoftware/io-at-spot-raspberry', // the github-user/repo-name
-    branch: 'master'
-}).on('all', function (payload) {
-    if (!busy) {
+var exec = require('child_process').exec;
+var github = githubhook({
+	port: 9002
+});
+ 
+ github.listen();
+ 
+ github.on('push:io-at-spot-raspberry:refs/heads/master', function( data) {
+     console.log('hook!', new Date());
+     
+     if (!busy) {
         busy = true;
         exec('./hook.sh', function (err, stdout, stderr) {
             if (err) {
@@ -18,4 +22,4 @@ gith({
             busy = false;
         });
     }
-});
+ });
