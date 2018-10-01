@@ -19,8 +19,8 @@ module.exports = function(passport) {
         callbackURL     : config.Google.callbackURL,
         passReqToCallback: true
     },
-    function(req, token, refreshToken, profile, done) {
-        req.google_token = token;
+    function(req, token, refreshToken, X, profile, done) {
+        req.google_token = X.id_token;
         return done(null, token, profile);
     }));
 

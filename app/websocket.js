@@ -17,6 +17,7 @@ var _socket = null;
 var _isConnected = false;
 var _readingUid = false;
 var _readingUidTimeout = null;
+var _callback = null;
 
 function isOnline() {
     return _isConnected;
@@ -110,6 +111,7 @@ function connectSocket() {
             var response = dataObj.data;
             
             if (response.responseCode == 200) {
+                
                 //Need more specified details on authentication
                 if (response.open) {
                     actuatorService.openDoor();
@@ -119,6 +121,11 @@ function connectSocket() {
             } else {
                 //Need more specified details on authentication error
                 actuatorService.error();
+            }
+            
+            if(_callback){
+                _callback(response);
+                _callback = null;
             }
         }
     });
@@ -181,6 +188,8 @@ function onTokenSubmitted(stringData, accessType, callback) {
         };
 
         _socket.send(JSON.stringify(obj));
+        
+        _callback = callback;
 
     } else {
         log.warn('device is offline, cannot authenticate.');

@@ -72,7 +72,7 @@
                     token: google_token
                 });
 
-                session.create(res.data.Id, res.data.UserName, res.data.Email, google_token);
+                session.create(res.data.id, res.data.userName, res.data.email, google_token);
 
                 $authDeferred.resolve(res);
 
