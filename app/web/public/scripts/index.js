@@ -9,7 +9,7 @@
 	]);
 
     angular.module('io.doorkeeper').constant('CONFIG', {
-        ioUrl: 'http://io.spot.it/',
+        ioUrl: 'http://localhost:5000/',
     });
 
 	angular.module('io.doorkeeper').config(moduleConfig).run(moduleRun);

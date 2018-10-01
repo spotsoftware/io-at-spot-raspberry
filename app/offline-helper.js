@@ -46,6 +46,8 @@ function syncData(socket) {
 function isWorkingTime() {
     var now = new Date();
     var workingDays = storage.getItem('workingDays');
+    
+    if(!workingDays) return true;
 
     var dayIndex = (now.getDay() - 1) >= 0 ? (now.getDay() - 1) : 6;
 
@@ -70,7 +72,7 @@ function authenticateMember(uid) {
 
     if (members) {
         for (var i = 0; i < members.length; i++) {
-            if (members[i].nfc_uid === uid) {
+            if (members[i].Uid === uid) {
                 saveData(uid);
                 return true;
             }

@@ -23,9 +23,15 @@ function isOnline() {
 }
 
 function closedSockedHandler() {
-    setTimeout(() => {
-        connectSocket();
-    }, 5000);
+    if(_socket != null){
+        setTimeout(function() {
+            
+            _socket.close();
+            _socket = null;
+            
+            connectSocket();
+        }, 5000);
+    }
 }
 
 /*
@@ -39,16 +45,15 @@ function connectSocket() {
         perMessageDeflate: false
     });
 
-    _socket.on('open', function open() {
+    _socket.on('open',function open() {
         log.debug('socket connected');
-
         _isConnected = true;
 
         //Cache mgmt
         offlineHelper.syncData(_socket);
     });
 
-    _socket.on('close', function () {
+    _socket.on('close',function () {
         // socket disconnected
         _isConnected = false;
 
@@ -66,13 +71,17 @@ function connectSocket() {
 
     _socket.on('error', function (err) {
         log.error(err, 'socket error');
-
         _socket.close();
+        
+        closedSockedHandler();
     });
 
     _socket.on('message', function (msg) {
 
         var dataObj = JSON.parse(msg);
+        
+        
+        log.debug('MESSAGE RECEIVED: ', dataObj);
 
         if (dataObj.type === 'read') {
             log.info('reading nfc uid request, start blinking');
@@ -99,6 +108,7 @@ function connectSocket() {
             offlineHelper.storeWorkingDays(dataObj.data);
         } else if (dataObj.type === 'response') {
             var response = dataObj.data;
+            
             if (response.responseCode == 200) {
                 //Need more specified details on authentication
                 if (response.open) {
