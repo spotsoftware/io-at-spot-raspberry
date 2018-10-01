@@ -31,9 +31,13 @@ function saveData(uid) {
 function syncData(socket) {
     var data = storage.getItem('wte');
     if (data && data !== []) {
-        socket.emit('offlineData', {
+
+        var obj = {
+            type: 'offlineData',
             data: data
-        }, function () {
+        };
+
+        socket.send(JSON.stringify(obj), {}, function() {
             storage.setItem('wte', []);
         });
     }

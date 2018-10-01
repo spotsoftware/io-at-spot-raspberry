@@ -17,7 +17,7 @@
             var google_token = $cookies['google_token'];
             
             if (authData) {
-                authService.refresh();
+                authService.getLocalUser(authData.token); 
             } else if (google_token){
                 authService.getLocalUser(google_token);                
             };
@@ -54,52 +54,25 @@
             return deferred.promise;
         };
 
-        authService.refresh = function () {
-
-            $authDeferred = $q.defer();
-
-            var authData = localStorageService.get('authorizationData');
-            if (authData) {
-
-                localStorageService.remove('authorizationData');
-
-                $http.post(CONFIG.ioUrl + 'auth/local/refresh', {
-                    token: authData.token
-                }).then(function (res) {
-
-                    localStorageService.set('authorizationData', {
-                        token: res.data.token
-                    });
-                    
-                    session.create(res.data.user._id, res.data.user.name, res.data.user.email, res.data.token, res.data.tokenHash);
-
-                    $authDeferred.resolve(res);
-
-                }).catch(function (reason) {
-                    $authDeferred.reject(reason);
-                    authService.logout();
-                });
-
-            } else {
-                $authDeferred.reject('Cannot refresh token: no auth data found in client.');
-            }
-
-            return $authDeferred.promise;
-        };
-
         authService.getLocalUser = function (google_token) {
 
             $authDeferred = $q.defer();
 
-            $http.post(CONFIG.ioUrl + 'auth/google/getLocalUser', {
-                token: google_token
-            }).then(function (res) {
+            var req = {
+                method: 'GET',
+                url: CONFIG.ioUrl + 'api/user/me',
+                headers: {
+                  'Authorization': 'Bearer ' + google_token
+                }
+               };
+
+            $http(req).then(function (res) {
 
                 localStorageService.set('authorizationData', {
-                    token: res.data.token
+                    token: google_token
                 });
 
-                session.create(res.data.user._id, res.data.user.name, res.data.user.email, res.data.token, res.data.tokenHash);
+                session.create(res.data.Id, res.data.UserName, res.data.Email, google_token);
 
                 $authDeferred.resolve(res);
 

@@ -14,12 +14,11 @@
 
         ////////////////
 
-        function create(id, name, email, token, tokenHash) {
+        function create(id, name, email, token) {
             sessionService.id = id;
             sessionService.name = name;
             sessionService.email = email;
             sessionService.token = token;
-            sessionService.tokenHash = tokenHash;
         };
 
         function destroy() {
@@ -27,7 +26,6 @@
             sessionService.name = null;
             sessionService.email = null;
             sessionService.token = null;
-            sessionService.tokenHash = null;
         };
     }
 })();
