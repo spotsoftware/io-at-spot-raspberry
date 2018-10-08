@@ -72,7 +72,7 @@ function authenticateMember(uid) {
 
     if (members) {
         for (var i = 0; i < members.length; i++) {
-            if (members[i].Uid === uid) {
+            if (members[i].uid === uid) {
                 saveData(uid);
                 return true;
             }
