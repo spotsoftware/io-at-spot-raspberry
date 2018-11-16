@@ -43,30 +43,6 @@ function syncData(socket) {
     }
 }
 
-function isWorkingTime() {
-    var now = new Date();
-    var workingDays = storage.getItem('workingDays');
-    
-    if(!workingDays) return true;
-
-    var dayIndex = (now.getDay() - 1) >= 0 ? (now.getDay() - 1) : 6;
-
-    var startTime = new Date(workingDays[dayIndex].startOfficeTime);
-    startTime.setFullYear(now.getFullYear());
-    startTime.setMonth(now.getMonth());
-    startTime.setDate(now.getDate());
-
-    var endTime = new Date(workingDays[dayIndex].endOfficeTime);
-    endTime.setFullYear(now.getFullYear());
-    endTime.setMonth(now.getMonth());
-    endTime.setDate(now.getDate());
-
-    return (workingDays[dayIndex].active &&
-        startTime <= now &&
-        endTime >= now);
-}
-
-
 function authenticateMember(uid) {
     var members = storage.getItem('members');
 
@@ -105,5 +81,4 @@ exports.syncData = syncData;
 //exports.emptyOfflineData = emptyData;
 exports.storeMembers = storeMembers;
 exports.storeWorkingDays = storeWorkingDays;
-//exports.isWorkingTime = isWorkingTime;
 exports.authorizeAccess = authorizeAccess;

@@ -5,6 +5,7 @@ var config = require('./config/config');
 var log = require('./logger');
 //NPM dependencies
 var WebSocket = require('ws');
+var storage = require('node-persist');
 
 //Start of parallel entities
 require('./config/close_handler');
@@ -18,6 +19,7 @@ var _isConnected = false;
 var _readingUid = false;
 var _readingUidTimeout = null;
 var _callback = null;
+var _dataObj = null;
 
 function isOnline() {
     return _isConnected;
@@ -79,12 +81,12 @@ function connectSocket() {
 
     _socket.on('message', function (msg) {
 
-        var dataObj = JSON.parse(msg);
+        _dataObj = JSON.parse(msg);
         
         
-        log.debug('MESSAGE RECEIVED: ', dataObj);
+        log.debug('MESSAGE RECEIVED: ', _dataObj);
 
-        if (dataObj.type === 'read') {
+        if (_dataObj.type === 'read') {
             log.info('reading nfc uid request, start blinking');
 
             _readingUid = true;
@@ -103,12 +105,12 @@ function connectSocket() {
                 actuatorService.stopBlinking();
                 _readingUid = false;
             }, 10000);
-        } else if (dataObj.type === 'members') {
-            offlineHelper.storeMembers(dataObj.data);
-        } else if (dataObj.type === 'workingDays') {
-            offlineHelper.storeWorkingDays(dataObj.data);
-        } else if (dataObj.type === 'response') {
-            var response = dataObj.data;
+        } else if (_dataObj.type === 'members') {
+            offlineHelper.storeMembers(_dataObj.data);
+        } else if (_dataObj.type === 'workingDays') {
+            offlineHelper.storeWorkingDays(_dataObj.data);
+        } else if (_dataObj.type === 'response') {
+            var response = _dataObj.data;
             
             if (response.responseCode == 200) {
                 
@@ -138,7 +140,7 @@ function onNFCTagSubmitted(uid) {
         var obj = {
             type: 'uid',
             data: {
-                id: dataObj.data,
+                id: _dataObj.data,
                 uid: uid
             }
         };
@@ -161,7 +163,7 @@ function onNFCTagSubmitted(uid) {
 
             _socket.send(JSON.stringify(obj));
         } else {
-            if (offlineHelper.authorizeAccess(uid)) {
+            if (isWorkingTime() && offlineHelper.authorizeAccess(uid)) {
                 actuatorService.openDoor();
             } else {
                 actuatorService.error();
@@ -174,22 +176,33 @@ function onTokenSubmitted(stringData, accessType, callback) {
     log.info('token read:' + stringData);
 
     if (isOnline()) {
-
-        var token = stringData;
-
-
-        var obj = {
-            type: 'tokenSubmitted',
-            data: {
-                token: token,
-                mark: (accessType !== 1),
-                open: (accessType !== 2)
-            }
-        };
-
-        _socket.send(JSON.stringify(obj));
+        if (isWorkingTime()) {
         
-        _callback = callback;
+            var token = stringData;
+    
+    
+            var obj = {
+                type: 'tokenSubmitted',
+                data: {
+                    token: token,
+                    mark: (accessType !== 1),
+                    open: (accessType !== 2)
+                }
+            };
+        
+
+            _socket.send(JSON.stringify(obj));
+            
+            _callback = callback;
+        } else {
+    
+            actuatorService.error();
+    
+            callback({
+                responseCode: 403,
+                message: 'Access not allowed at this time'
+            });
+        }
 
     } else {
         log.warn('device is offline, cannot authenticate.');
@@ -202,6 +215,27 @@ function onTokenSubmitted(stringData, accessType, callback) {
         });
     }
 }
+
+
+function isWorkingTime() {
+    var now = new Date();
+    var workingDays = storage.getItem('workingDays');
+    
+    if(!workingDays || workingDays.length === 0) return true;
+
+    var dayIndex = now.getDay();
+
+    var startTime = new Date(workingDays[dayIndex].startOfficeTime);
+    
+    var startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), workingDays[dayIndex].startHour, workingDays[dayIndex].startMinute, 0, 0);
+    var endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), workingDays[dayIndex].endHour, workingDays[dayIndex].endMinute, 0, 0);
+
+    return (workingDays[dayIndex].active &&
+        startTime <= now &&
+        endTime >= now);
+}
+
+
 
 log.debug('starting socket service');
 

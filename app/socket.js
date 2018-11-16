@@ -104,7 +104,7 @@ function connectSocket(authToken) {
 
             actuatorService.stopBlinking();
             _readingUid = false;
-        }, 10000);
+        }, 5000);
     });
 
     _socket.on('members', function (data) {
