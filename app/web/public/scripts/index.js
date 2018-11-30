@@ -9,7 +9,7 @@
 	]);
 
     angular.module('io.doorkeeper').constant('CONFIG', {
-        ioUrl: 'http://localhost:5000/',
+        ioUrl: 'https://spot-time-api.azurewebsites.net/',
     });
 
 	angular.module('io.doorkeeper').config(moduleConfig).run(moduleRun);
