@@ -1,6 +1,6 @@
 var log = require('bunyan').createLogger({
     name: 'doorkeeper',
-    /* streams: [{
+    streams: [{
             type: 'rotating-file',
             level: 'debug',
             path: '/home/pi/io-at-spot/doorkeeper/logs/doorkeeper_debug.log',
@@ -33,8 +33,8 @@ var log = require('bunyan').createLogger({
             path: '/home/pi/io-at-spot/doorkeeper/logs/doorkeeper_fatal.log',
             period: '1y', // daily rotation
             count: 3 // keep 3 back copies
-    }]*/
-    stream: process.stderr,
+    }],
+    // stream: process.stderr,
     level: "debug"
 });
 
