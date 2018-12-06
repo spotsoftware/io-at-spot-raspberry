@@ -58,21 +58,14 @@ function authenticateMember(uid) {
     return false;
 }
 
-
 function authorizeAccess(uid) {
-    if (isWorkingTime()) {
-        if (authenticateMember(uid)) {
+    if (authenticateMember(uid)) {
 
-            logger.info('offline access allowed: ' + uid );
-            return true;
-        } else {
-
-            logger.info('offline access denied: ' + uid+ '. Unknown user.');
-            return false;
-        }
+        logger.info('offline access allowed: ' + uid );
+        return true;
     } else {
 
-        logger.info('offline access denied: ' + uid + '. No working time.');
+        logger.info('offline access denied: ' + uid+ '. Unknown user.');
         return false;
     }
 }
