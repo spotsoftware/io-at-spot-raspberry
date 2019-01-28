@@ -4,8 +4,16 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),    
-    passport = require('passport');
-
+    passport = require('passport'),
+    http = require('http'),
+    https = require('https');
+    
+var keys_dir = 'web/keys/';
+var  server_options = {
+        key  : fs.readFileSync(keys_dir + 'key.pem'),
+        cert : fs.readFileSync(keys_dir + 'cert.pem')
+      }
+    
 var app = express(),
     _listener;
 
@@ -36,8 +44,11 @@ app.use(passport.session()); // persistent login sessions
 require('./passport')(passport);
 
 
-var server = app.listen(80, function () {
-});
+// var server = app.listen(80, function () {
+// });
+
+https.createServer(server_options, app).listen(443);
+http.createServer(app).listen(80);
 
 module.exports = function (listener) {
     //Routing
