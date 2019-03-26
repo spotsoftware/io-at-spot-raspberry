@@ -43,6 +43,19 @@ function syncData(socket) {
     }
 }
 
+function clearSyncData(){
+    storage.setItem('wte', []);
+}
+
+function getDataToSync(){
+    var data = storage.getItem('wte');
+    if (data && data !== []) {
+      return data;
+    } else {
+        return [];
+    }
+}
+
 function authenticateMember(uid) {
     var members = storage.getItem('members');
 
@@ -75,3 +88,5 @@ exports.syncData = syncData;
 exports.storeMembers = storeMembers;
 exports.storeWorkingDays = storeWorkingDays;
 exports.authorizeAccess = authorizeAccess;
+exports.getDataToSync = getDataToSync;
+exports.clearSyncData = clearSyncData;

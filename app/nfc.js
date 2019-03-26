@@ -30,9 +30,9 @@ function usbNfcRead() {
             // results is an array consisting of messages collected during execution
             logger.debug('tag read uid: %j', results, count);
 
-            _listener.onNFCTagSubmitted(results[0]);
-
-            usbNfcRead();
+            _listener.onNFCTagSubmitted(results[0], function(){
+                usbNfcRead();
+            });
         }
     });
 }

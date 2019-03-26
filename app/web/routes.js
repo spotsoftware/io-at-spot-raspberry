@@ -26,7 +26,7 @@ module.exports = function (app, passport, listener) {
         	}
         	
         	listener.onTokenSubmitted(req.body.token, accessType, function (response) {
-				res.status(response.responseCode).send(response.responseMessage);
+				res.status(response.responseCode).send(response.message);
 		    });
         }
         
